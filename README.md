@@ -12,7 +12,7 @@ Dự án website bán hàng thời trang được xây dựng bằng ASP.NET Cor
 ## Công nghệ sử dụng
 
 - ASP.NET Core MVC
-- Bootstrap 5
+- Bootstrap 
 - SignalR (Real-time notifications)
 - File-based data storage
 
