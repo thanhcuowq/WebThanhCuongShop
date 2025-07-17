@@ -1,0 +1,225 @@
+@model ThanhCuongShop.Models.Product
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+            <li class="breadcrumb-item"><a href="@Url.Action("Index", "Product")">Sản phẩm</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Name</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Product Images -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body text-center">
+                    @if (!string.IsNullOrEmpty(Model.ImageUrls))
+                    {
+                        var images = Model.ImageUrls.Split(',');
+                        <div id="productCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                @for (int i = 0; i < images.Length; i++)
+                                {
+                                    <div class="carousel-item @(i == 0 ? "active" : "")">
+                                        <img src="@images[i].Trim()" class="d-block w-100" alt="@Model.Name" 
+                                             style="max-height: 400px; object-fit: cover;">
+                                    </div>
+                                }
+                            </div>
+                            @if (images.Length > 1)
+                            {
+                                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">@System.Globalization.CultureInfo.CurrentCulture.TextInfo.ToTitleCase(Model.Name)</h2>
+                    <p class="text-muted">@Model.Description</p>
+
+                    <!-- Price -->
+                    <div class="mb-3">
+                        @if (Model.IsOnSale)
+                        {
+                            <span class="text-decoration-line-through text-muted h5">@Model.OriginalPrice.ToString("N0") VNĐ</span>
+                            <span class="text-danger h3 fw-bold ms-2">@Model.Price.ToString("N0") VNĐ</span>
+                            <span class="badge bg-danger ms-2">-@Model.DiscountPercent%</span>
+                        }
+                        else
+                        {
+                            <span class="text-danger h3 fw-bold">@Model.Price.ToString("N0") VNĐ</span>
+                        }
+                    </div>
+
+                    <!-- Product Details -->
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <strong>Danh mục:</strong> @Model.Category
+                        </div>
+                        <div class="col-6">
+                            <strong>Giới tính:</strong> @Model.Gender
+                        </div>
+                    </div>
+
+                    <!-- Màu sắc chọn được -->
+                    @if (!string.IsNullOrEmpty(Model.Colors))
+                    {
+                        <div class="mb-3">
+                            <strong>Chọn màu sắc:</strong>
+                            <div class="btn-group" role="group" aria-label="Chọn màu">
+                                @foreach (var color in Model.Colors.Split(','))
+                                {
+                                    var colorId = color.Trim().Replace(" ", "_");
+                                    <input type="radio" class="btn-check" name="colorOption" id="color_@colorId" value="@color.Trim()" autocomplete="off">
+                                    <label class="btn btn-outline-secondary" for="color_@colorId">@color.Trim()</label>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Size chọn được -->
+                    @if (!string.IsNullOrEmpty(Model.Sizes))
+                    {
+                        <div class="mb-3">
+                            <strong>Chọn size:</strong>
+                            <div class="btn-group" role="group" aria-label="Chọn size">
+                                @foreach (var size in Model.Sizes.Split(','))
+                                {
+                                    <input type="radio" class="btn-check" name="sizeOption" id="size_@size.Trim()" value="@size.Trim()" autocomplete="off">
+                                    <label class="btn btn-outline-primary" for="size_@size.Trim()">@size.Trim()</label>
+                                }
+                            </div>
+                        </div>
+                    }
+
+                    <!-- Số lượng mua -->
+                    <div class="mb-3">
+                        <strong>Số lượng:</strong>
+                        <div class="d-inline-flex align-items-center ms-2" style="background:#fafafa;border-radius:12px;box-shadow:0 2px 8px #eee;">
+                            <button type="button" class="btn btn-link px-2 py-1 text-dark fs-5" onclick="changeQuantity(-1)">-</button>
+                            <input type="text" id="quantityInput" class="form-control text-center border-0 bg-transparent" value="1" style="width:48px;box-shadow:none;outline:none;" readonly />
+                            <button type="button" class="btn btn-link px-2 py-1 text-dark fs-5" onclick="changeQuantity(1)">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex flex-column align-items-center gap-2 mt-4">
+                        <form id="buyNowForm" method="get" action="/Product/Checkout" class="w-100" style="max-width:320px;">
+                            <input type="hidden" name="productId" value="@Model.Id" />
+                            <input type="hidden" name="color" id="buyNowColor" />
+                            <input type="hidden" name="size" id="buyNowSize" />
+                            <input type="hidden" name="quantity" id="buyNowQuantity" />
+                            <input type="hidden" name="price" id="buyNowPrice" value="@Model.Price" />
+                            <button type="submit" class="btn btn-success btn-lg rounded-pill w-100 py-2 px-4 mb-2" style="font-size:1.15rem;font-weight:600;box-shadow:0 2px 8px #e0e0e0;" onclick="return validateBuyNow()">
+                                <i class="bi bi-lightning-fill"></i> Mua Ngay
+                            </button>
+                        </form>
+                        <button id="addToCartBtn" type="button" class="btn btn-outline-primary w-100 rounded-pill py-2 px-4" style="max-width:320px;font-size:1.08rem;">Thêm vào giỏ hàng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3>Sản phẩm liên quan</h3>
+            <div class="row">
+                @{
+                    var relatedProducts = ThanhCuongShop.Controllers.ProductController.products
+                        .Where(p => p.Category == Model.Category && p.Id != Model.Id)
+                        .Take(4);
+                }
+                @foreach (var product in relatedProducts)
+                {
+                    <div class="col-md-3 mb-3">
+                        <div class="card h-100">
+                            <div class="card-img-top text-center p-2" style="background:#f8f9fa; min-height:150px;">
+                                @if (!string.IsNullOrEmpty(product.ImageUrls))
+                                {
+                                    var images = product.ImageUrls.Split(',');
+                                    if (images.Length > 0)
+                                    {
+                                        <img src="@images[0].Trim()" alt="@product.Name" 
+                                             style="width:100%;height:130px;object-fit:cover;" />
+                                    }
+                                }
+                            </div>
+                            <div class="card-body">
+                                <h6 class="card-title">@product.Name</h6>
+                                <p class="text-danger fw-bold">@product.Price.ToString("N0") VNĐ</p>
+                                <a href="@Url.Action("Details", "Product", new { id = product.Id })" 
+                                   class="btn btn-outline-primary btn-sm">Xem chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function changeQuantity(delta) {
+            var input = document.getElementById('quantityInput');
+            var val = parseInt(input.value) || 1;
+            val += delta;
+            if (val < 1) val = 1;
+            input.value = val;
+        }
+        function addToCart() {
+            var productId = @Model.Id;
+            var color = $("input[name='selectedColor']:checked").val();
+            var size = $("input[name='selectedSize']:checked").val();
+            var quantity = parseInt($("#quantityInput").val());
+            $.post('/Product/AddToCart', { productId, color, size, quantity }, function(res) {
+                if(res.success) {
+                    $(".cart-badge").text(res.cartCount);
+                    alert('Đã thêm vào giỏ hàng!');
+                }
+            });
+        }
+        function validateBuyNow() {
+            var selectedSize = document.querySelector('input[name="sizeOption"]:checked');
+            var selectedColor = document.querySelector('input[name="colorOption"]:checked');
+            var quantity = document.getElementById('quantityInput').value;
+            if (!selectedSize) {
+                alert('Vui lòng chọn size trước khi mua hàng!');
+                return false;
+            }
+            if (!selectedColor) {
+                alert('Vui lòng chọn màu sắc trước khi mua hàng!');
+                return false;
+            }
+            document.getElementById('buyNowColor').value = selectedColor.value;
+            document.getElementById('buyNowSize').value = selectedSize.value;
+            document.getElementById('buyNowQuantity').value = quantity;
+            // Tính lại tổng tiền cho sản phẩm này
+            var price = parseInt(document.getElementById('buyNowPrice').value) || 0;
+            document.getElementById('buyNowPrice').value = price * parseInt(quantity);
+            return true;
+        }
+        $(function(){
+            $("#addToCartBtn").click(function(e){
+                e.preventDefault();
+                addToCart();
+            });
+        });
+    </script>
+} 

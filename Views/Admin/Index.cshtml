@@ -1,0 +1,16 @@
+@{
+    ViewData["Title"] = "Quản trị";
+}
+<div class="container py-5">
+    <h2 class="mb-4 text-center text-danger"><i class="bi bi-shield-lock me-2"></i>Trang Quản trị</h2>
+    <div class="d-flex flex-wrap justify-content-center gap-4 mb-4">
+        <a href="/Admin/OrderList" class="btn btn-outline-primary btn-lg px-4"><i class="bi bi-clipboard-data me-2"></i>Duyệt đơn hàng</a>
+        <a href="/Admin/CustomerList" class="btn btn-outline-success btn-lg px-4"><i class="bi bi-people me-2"></i>Danh sách khách hàng</a>
+        <a href="/Admin/RevenueByDate" class="btn btn-outline-warning btn-lg px-4"><i class="bi bi-bar-chart me-2"></i>Báo cáo doanh thu theo thời gian</a>
+        <a href="/Admin/RevenueByProduct" class="btn btn-outline-info btn-lg px-4"><i class="bi bi-pie-chart me-2"></i>Báo cáo doanh thu theo sản phẩm</a>
+    </div>
+    <div class="d-flex justify-content-center gap-4">
+        <a href="/Admin/AddProduct?type=Quan" class="btn btn-primary btn-lg"><i class="bi bi-plus-circle me-2"></i>Thêm Quần</a>
+        <a href="/Admin/AddProduct?type=Ao" class="btn btn-success btn-lg"><i class="bi bi-plus-circle me-2"></i>Thêm Áo</a>
+    </div>
+</div> 

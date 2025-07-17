@@ -1,0 +1,28 @@
+@model ThanhCuongShop.Models.RegisterViewModel
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Đăng ký</h2>
+                <form asp-action="Register" method="post">
+                    <div class="mb-3">
+                        <label class="form-label">Email hoặc SĐT</label>
+                        <input asp-for="EmailOrPhone" class="form-control" />
+                        <span asp-validation-for="EmailOrPhone" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Mật khẩu</label>
+                        <input asp-for="Password" type="password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">Đăng ký</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+} 

@@ -1,0 +1,321 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ThanhCuongShop</title>
+    <script type="importmap"></script>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ThanhCuongShop.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+</head>
+<body>
+    </div>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom mb-4">
+            <div class="container">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="navbar-brand" style="font-size:1.3rem; font-weight:bold; letter-spacing:1px; text-transform:capitalize; padding-left:4px;">ThanhCuongShop</span>
+                    <a href="/" class="btn btn-outline-primary btn-home-nav d-flex align-items-center px-3 py-1 ms-2" style="font-size:0.98rem; border-radius: 20px; min-width: 110px; height: 34px;">
+                        <i class="bi bi-house-door me-2" style="font-size:1.15rem;"></i>
+                        <span style="font-size:1rem; white-space:nowrap;">Trang chủ</span>
+                    </a>
+                </div>
+                <div class="collapse navbar-collapse justify-content-center">
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-3">
+                        @if (Context.Session.GetString("IsAdmin") == "true")
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold text-danger" href="/Admin"><i class="bi bi-shield-lock me-1"></i>Quản trị</a>
+                            </li>
+                        }
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-uppercase fw-bold dropdown-toggle" href="#" id="aokhoacDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Áo khoác</a>
+                            <ul class="dropdown-menu" aria-labelledby="aokhoacDropdown">
+                                <li><a class="dropdown-item" href="/Product?category=Áo Khoác Nam">Áo Khoác Nam</a></li>
+                                <li><a class="dropdown-item" href="/Product?category=Áo Khoác Nữ">Áo Khoác Nữ</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-uppercase fw-bold dropdown-toggle" href="#" id="namDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Nam</a>
+                            <ul class="dropdown-menu" aria-labelledby="namDropdown">
+                                <li><a class="dropdown-item" href="/Product?category=Áo Nam">Áo Nam</a></li>
+                                <li><a class="dropdown-item" href="/Product?category=Quần Nam">Quần Nam</a></li>
+                                <li><a class="dropdown-item" href="/Product?category=Đồ bộ Nam">Đồ bộ Nam</a></li>
+                                <li><a class="dropdown-item" href="/Product?category=Quần Short Nam">Quần Short Nam</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-uppercase fw-bold dropdown-toggle" href="#" id="nuDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Nữ</a>
+                            <ul class="dropdown-menu" aria-labelledby="nuDropdown">
+                                <li><a class="dropdown-item" href="/Product?category=Áo Nữ">Áo Nữ</a></li>
+                                <li><a class="dropdown-item" href="/Product?category=Quần Nữ">Quần Nữ</a></li>
+                                <li><a class="dropdown-item" href="/Product?category=Đồ bộ Nữ">Đồ bộ Nữ</a></li>
+                                <li><a class="dropdown-item" href="/Product?category=Quần Short Nữ">Quần Short Nữ</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-uppercase fw-bold dropdown-toggle" href="#" id="dodoDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Đồ Đôi</a>
+                            <ul class="dropdown-menu" aria-labelledby="dodoDropdown">
+                                <li><a class="dropdown-item" href="/Product?category=Đồ Đôi">Đồ Đôi</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link text-uppercase fw-bold dropdown-toggle" href="#" id="phukienDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Phụ kiện</a>
+                            <ul class="dropdown-menu" aria-labelledby="phukienDropdown">
+                                <li><a class="dropdown-item" href="/Product?category=Dép">Dép</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav ms-auto d-flex align-items-center" style="gap: 8px;">
+                        @using Microsoft.AspNetCore.Http
+                        @{
+                            var userName = Context.Session.GetString("UserName");
+                            var isAdmin = Context.Session.GetString("IsAdmin") == "true";
+                        }
+                        @if (!string.IsNullOrEmpty(userName))
+                        {
+                            <li class="nav-item dropdown user-info" style="max-width: 120px;">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center p-0 w-auto" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size:1rem; min-width:0;">
+                                    <i class="bi bi-person-circle me-1" style="font-size:1.15rem;"></i>
+                                    <span style="font-size:1rem; max-width:70px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:inline-block; vertical-align:middle;">@userName</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown" style="min-width:180px;">
+                                    <li><a class="dropdown-item" href="/Account/Profile"><i class="bi bi-person-lines-fill me-2"></i>Thông tin tài khoản</a></li>
+                                </ul>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold" href="/Account/OrderHistory">
+                                    <i class="bi bi-clock-history me-1"></i>Lịch sử mua hàng
+                                </a>
+                            </li>
+                            <li class="nav-item d-flex align-items-center">
+                                <a href="/Product/Cart" class="cart-icon position-relative ms-2" style="text-decoration:none;">
+                                    <i class="bi bi-bag" style="font-size:1.6rem;"></i>
+                                    <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" style="font-size:0.9rem; min-width:22px;">
+                                        @(Context.Session.GetInt32("CartCount") ?? 0)
+                                    </span>
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item me-2">
+                                <a class="btn btn-outline-primary btn-sm" asp-controller="Account" asp-action="Login">Đăng nhập</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-primary btn-sm" asp-controller="Account" asp-action="Register">Đăng ký</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <style>
+            .navbar-nav .nav-link {
+                letter-spacing: 1px;
+                font-size: 1.1rem;
+                color: #111;
+                position: relative;
+                padding-bottom: 2px;
+            }
+            .navbar-nav .nav-link.active-menu, .navbar-nav .nav-link:hover {
+                border-bottom: 2px solid #111;
+                color: #111;
+            }
+            .navbar-nav .user-info {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                max-width: 80px;
+            }
+            .navbar-nav .user-info .navbar-text {
+                font-weight: 600;
+                font-size: 0.95rem;
+                color: #222;
+            }
+            .navbar-nav .user-info .nav-link.dropdown-toggle {
+                font-size: 0.95rem !important;
+                min-width: 0 !important;
+                padding: 2px 6px !important;
+            }
+            .navbar-nav .user-info span {
+                font-size: 0.95rem !important;
+                max-width: 50px !important;
+            }
+            
+            /* Cải thiện dropdown menu */
+            .dropdown-menu {
+                border: none;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                border-radius: 8px;
+                padding: 8px 0;
+                margin-top: 8px;
+                min-width: 180px;
+            }
+            
+            .dropdown-item {
+                padding: 12px 20px;
+                font-size: 0.95rem;
+                font-weight: 500;
+                color: #333;
+                transition: all 0.2s ease;
+                border-radius: 0;
+                margin: 2px 8px;
+                border-radius: 6px;
+            }
+            
+            .dropdown-item:hover {
+                background-color: #f8f9fa;
+                color: #000;
+                transform: translateX(4px);
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            
+            .dropdown-item:active {
+                background-color: #e9ecef;
+                color: #000;
+            }
+            
+            /* Đảm bảo dropdown không bị đóng khi di chuyển chuột */
+            .dropdown:hover .dropdown-menu {
+                display: block;
+            }
+            
+            /* Tăng khoảng cách giữa các nav items */
+            .navbar-nav .nav-item {
+                margin: 0 8px;
+            }
+            
+            /* Cải thiện dropdown toggle */
+            .dropdown-toggle::after {
+                margin-left: 6px;
+                transition: transform 0.2s ease;
+            }
+            
+            .dropdown.show .dropdown-toggle::after {
+                transform: rotate(180deg);
+            }
+            .btn-home-nav {
+                min-width: 110px;
+                font-weight: 500;
+                box-shadow: none;
+                transition: background 0.2s, color 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                padding: 0 12px;
+            }
+            .btn-home-nav span {
+                white-space: nowrap;
+            }
+            .btn-home-nav:hover {
+                background: #e3f0ff;
+                color: #0d6efd;
+                border-color: #0d6efd;
+            }
+        </style>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center py-2">
+            <div class="copyright mb-2 mb-md-0">
+                &copy; 2025 - ThanhCuongShop - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </div>
+            <div class="footer-contact-mini d-flex align-items-center gap-4">
+                <span class="d-flex align-items-center gap-2">
+                    <i class="bi bi-phone" style="font-size:1.2rem;"></i>
+                    <span>Hotline: <a href="tel:0397649709" class="text-info text-decoration-none">0397649709</a></span>
+                </span>
+                <span class="d-flex align-items-center gap-2">
+                    <i class="bi bi-envelope" style="font-size:1.2rem;"></i>
+                    <a href="mailto:thanhcuongg.05@gmail.com" class="text-info text-decoration-none">thanhcuongg.05@gmail.com</a>
+                </span>
+            </div>
+        </div>
+    </footer>
+    <style>
+        .footer-contact-mini {
+            font-size: 1rem;
+            color: #222;
+        }
+        .footer-contact-mini a { color: #00c3ff; }
+        .footer-contact-mini a:hover { text-decoration: underline; color: #111; }
+        @@media (max-width: 600px) {
+            .footer-contact-mini { flex-direction: column !important; gap: 0.5rem !important; }
+        }
+    </style>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/7.0.5/signalr.min.js"></script>
+    <script>
+        $(function() {
+            // Lấy userName từ session Razor
+            var userName = '@(Context.Session.GetString("UserName") ?? "")';
+            if (userName) {
+                // Kết nối tới SignalR Hub
+                var connection = new signalR.HubConnectionBuilder()
+                    .withUrl("/orderHub")
+                    .build();
+                connection.start().then(function() {
+                    // Đăng ký userName với server nếu cần (nếu dùng UserId mapping)
+                });
+                // Lắng nghe sự kiện xác nhận đơn hàng
+                connection.on("OrderConfirmed", function(orderId) {
+                    showOrderConfirmedModal(orderId);
+                });
+            }
+        });
+        // Hàm hiển thị modal thông báo realtime
+        function showOrderConfirmedModal(orderId) {
+            if (document.getElementById('orderConfirmedModalRealtime')) return;
+            var modalHtml = `
+            <div class="modal fade show" id="orderConfirmedModalRealtime" tabindex="-1" aria-modal="true" role="dialog" style="display:block; background:rgba(0,0,0,0.35);z-index:2000;">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content border-success shadow-lg">
+                        <div class="modal-header bg-success text-white">
+                            <h5 class="modal-title"><i class="bi bi-check-circle-fill me-2"></i>Đặt hàng thành công!</h5>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" onclick="closeOrderConfirmedModalRealtime()"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <p class="fs-5 mb-2">Đơn hàng <b>#${orderId}</b> của bạn đã được xác nhận thành công!</p>
+                            <p>Chúng tôi sẽ liên hệ với bạn để giao hàng sớm nhất.<br>Cảm ơn bạn đã mua hàng tại <b>ThanhCuongShop</b>.</p>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn btn-success px-4" onclick="closeOrderConfirmedModalRealtime()">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            $("body").append(modalHtml);
+            setTimeout(closeOrderConfirmedModalRealtime, 10000);
+        }
+        function closeOrderConfirmedModalRealtime() {
+            var modal = document.getElementById('orderConfirmedModalRealtime');
+            if(modal) modal.remove();
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <!-- Widget liên hệ nổi góc phải dưới -->
+    <div class="contact-widget">
+        <a href="tel:0397649709" class="contact-btn hotline" target="_blank" title="Hotline">
+            <i class="bi bi-telephone-fill"></i>
+            <span>Hotline</span>
+        </a>
+        <a href="https://zalo.me/0397649709" class="contact-btn zalo" target="_blank" title="Zalo">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Icon_of_Zalo.svg" alt="Zalo" style="width:22px;height:22px;"> <span>Zalo</span>
+        </a>
+        <a href="https://facebook.com/thanhcuonwq" class="contact-btn facebook" target="_blank" title="Facebook">
+            <i class="bi bi-facebook"></i>
+            <span>Facebook</span>
+        </a>
+    </div>
+</body>
+</html>

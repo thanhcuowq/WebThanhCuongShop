@@ -1,0 +1,65 @@
+@model List<ThanhCuongShop.Models.Order>
+@{
+    ViewData["Title"] = "Quản lý đơn hàng";
+    var statusList = new[] { "Chờ xác nhận", "Đã xác nhận", "Đã giao", "Đã hủy" };
+}
+<div class="container py-5">
+    <h2 class="mb-4 text-center text-primary"><i class="bi bi-clipboard-data me-2"></i>Quản lý đơn hàng</h2>
+    <table class="table table-bordered table-hover align-middle bg-white shadow-sm">
+        <thead class="table-light">
+            <tr>
+                <th>#</th>
+                <th>Khách hàng</th>
+                <th>Email</th>
+                <th>SĐT</th>
+                <th>Tổng tiền</th>
+                <th>Ngày đặt</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var o = Model[i];
+                <tr>
+                    <td>@(o.Id)</td>
+                    <td>@o.UserName</td>
+                    <td>@o.UserEmail</td>
+                    <td>@o.UserPhone</td>
+                    <td class="text-danger fw-bold">@o.Total.ToString("N0") ₫</td>
+                    <td>@o.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                    <td>
+                        <span class="badge @GetStatusClass(o.Status)">@o.Status</span>
+                    </td>
+                    <td>
+                        <form asp-action="UpdateOrderStatus" method="post" class="d-flex gap-2 align-items-center">
+                            <input type="hidden" name="orderId" value="@o.Id" />
+                            <select name="status" class="form-select form-select-sm" style="min-width:120px;">
+                                @foreach (var s in statusList)
+                                {
+                                    <option value="@s" selected="@(o.Status == s ? "selected" : null)">@s</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn btn-sm btn-primary">Cập nhật</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <a href="/Admin" class="btn btn-secondary mt-3">Quay lại</a>
+</div>
+
+@functions {
+    string GetStatusClass(string status)
+    {
+        return status switch
+        {
+            "Đã xác nhận" => "bg-success",
+            "Đã giao" => "bg-info text-dark",
+            "Đã hủy" => "bg-danger",
+            _ => "bg-warning text-dark"
+        };
+    }
+} 

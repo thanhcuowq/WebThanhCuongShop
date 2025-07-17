@@ -1,0 +1,61 @@
+@model List<ThanhCuongShop.Models.CartItem>
+@{
+    ViewData["Title"] = "Thanh toán đơn hàng";
+    var total = ViewBag.Total ?? 0;
+    var bankName = "Vietcombank";
+    var accountNumber = "1041887263";
+    var accountName = "TRAN THANH CUONG";
+    var isSingle = ViewBag.SingleProduct != null && (bool)ViewBag.SingleProduct;
+    var productId = ViewBag.ProductId;
+    var color = ViewBag.Color;
+    var size = ViewBag.Size;
+    var quantity = ViewBag.Quantity;
+}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0"><i class="bi bi-qr-code me-2"></i>Quét mã QR để thanh toán</h4>
+                </div>
+                <div class="card-body text-center">
+                    <p class="mb-2">Vui lòng quét mã QR bằng app ngân hàng hoặc ví điện tử để thanh toán đơn hàng.</p>
+                    <div class="mb-3">
+                        <img src="https://img.vietqr.io/image/VCB-1041887263-compact2.png?amount=@total&addInfo=TCShop@(productId ?? "")-@ViewBag.UserPhoneOrName" alt="QR Thanh toán" style="max-width: 260px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.12);">
+                    </div>
+                    <a href="/Product/PaymentSuccess" class="btn btn-success btn-lg fw-bold mb-3">Tôi đã chuyển khoản</a>
+                    <div class="mb-3 text-start" style="font-size:1.1rem;">
+                        <div><b>Ngân hàng nhận tiền:</b> <span class="text-primary">@bankName</span></div>
+                        <div><b>Tài khoản người nhận:</b> <span class="text-danger">@accountNumber</span></div>
+                        <div><b>Tên người nhận:</b> <span class="text-success">@accountName</span></div>
+                        <div><b>Số tiền nhận:</b> <span class="fw-bold text-danger">@String.Format("{0:N0}", total) ₫</span></div>
+                        <div><b>Nội dung chuyển khoản:</b> <span style="color: #0d6efd; font-weight: 600;">TCShop@(productId ?? "")-@ViewBag.UserPhoneOrName</span></div>
+                    </div>
+                    @if (isSingle)
+                    {
+                        <div class="alert alert-secondary text-start mb-3">
+                            <div><b>Mã sản phẩm:</b> @productId</div>
+                            <div><b>Màu sắc:</b> @color</div>
+                            <div><b>Size:</b> @size</div>
+                            <div><b>Số lượng:</b> @quantity</div>
+                        </div>
+                    }
+                    <div class="alert alert-info text-start">
+                        <ul class="mb-0">
+                            <li>Chuyển khoản đúng số tiền và <b>nội dung chuyển khoản</b> như trên.</li>
+                            <li>Sau khi chuyển khoản, bạn sẽ nhận được xác nhận đơn hàng qua email hoặc điện thoại.</li>
+                            <li>Nếu có vấn đề, liên hệ <a href="tel:0397649709">Hotline 0397 649 709</a>.</li>
+                        </ul>
+                    </div>
+                    <div class="d-flex justify-content-center gap-3 mt-3">
+                        @if (isSingle && productId != null)
+                        {
+                            <a href="/Product/Details/@productId" class="btn btn-outline-secondary"><i class="bi bi-arrow-left me-2"></i>Quay lại sản phẩm</a>
+                        }
+                        <a href="/Product/Cart" class="btn btn-outline-primary"><i class="bi bi-arrow-left me-2"></i>Quay lại giỏ hàng</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> 

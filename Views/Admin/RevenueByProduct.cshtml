@@ -1,0 +1,44 @@
+@{
+    ViewData["Title"] = "Báo cáo doanh thu theo sản phẩm";
+    var revenueList = ViewBag.RevenueByProduct as IEnumerable<dynamic>;
+}
+<h2 class="mb-4 text-center text-info">Báo cáo doanh thu theo sản phẩm</h2>
+<form method="get" class="row g-3 mb-4 justify-content-center">
+    <div class="col-auto">
+        <label for="fromDate" class="form-label">Từ ngày:</label>
+        <input type="date" id="fromDate" name="fromDate" class="form-control" value="@ViewBag.FromDate" />
+    </div>
+    <div class="col-auto">
+        <label for="toDate" class="form-label">Đến ngày:</label>
+        <input type="date" id="toDate" name="toDate" class="form-control" value="@ViewBag.ToDate" />
+    </div>
+    <div class="col-auto align-self-end">
+        <button type="submit" class="btn btn-info">Xem báo cáo</button>
+    </div>
+</form>
+<table class="table table-bordered table-striped">
+    <thead class="table-info">
+        <tr>
+            <th>Sản phẩm</th>
+            <th>Số lượng bán</th>
+            <th>Doanh thu</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (revenueList != null && revenueList.Any())
+        {
+            foreach (var item in revenueList)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.TotalSold</td>
+                    <td>@String.Format("{0:N0}", item.TotalRevenue) VNĐ</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr><td colspan="3" class="text-center">Không có dữ liệu</td></tr>
+        }
+    </tbody>
+</table> 
